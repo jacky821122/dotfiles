@@ -98,5 +98,9 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 umask 22
 export PATH="/home/jacky821122/.anaconda3/bin:$PATH"
-alias cdcv="cd /mnt/d/Users/Jacky/OneDrive/Course_Computer\ Vision/cv"
+alias cdk="cd /mnt/d/Users/Jacky/OneDrive/kLine"
+alias cdtest="cd /mnt/d/test"
+alias cdv="cd /mnt/d/Users/Jacky/OneDrive/VIX"
+alias cdf="cd '/mnt/d/Users/Jacky/OneDrive/flask'"
+alias cdk="cd '/mnt/d/Users/Jacky/OneDrive/kline'"
 export DISPLAY=localhost:0.0
