@@ -88,6 +88,22 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/jacky821122/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/jacky821122/.anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/jacky821122/.anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/jacky821122/.anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+PROMPT=$(echo $PROMPT | sed 's/(base) //')
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -97,10 +113,23 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 umask 22
-export PATH="/home/jacky821122/.anaconda3/bin:$PATH"
-alias cdk="cd /mnt/d/Users/Jacky/OneDrive/kLine"
+# export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
+
+export LIBGL_ALWAYS_INDIRECT=1
 alias cdtest="cd /mnt/d/test"
 alias cdv="cd /mnt/d/Users/Jacky/OneDrive/VIX"
 alias cdf="cd '/mnt/d/Users/Jacky/OneDrive/flask'"
 alias cdk="cd '/mnt/d/Users/Jacky/OneDrive/kline'"
-export DISPLAY=localhost:0.0
+alias cdotest="cd /mnt/d/Users/Jacky/OneDrive/test"
+alias cdba="cd ~/balmii"
+alias ggg="./mvsis -f ggg.sh"
+alias aaa="./mvsis -f aaa.script"
+alias bbb="./mvsis -f bbb.script"
+alias subl="/mnt/c/Program\ Files/Sublime\ Text/subl.exe"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/jacky821122/google-cloud-sdk/path.zsh.inc' ]; then . '/home/jacky821122/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/jacky821122/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/jacky821122/google-cloud-sdk/completion.zsh.inc'; fi
+
