@@ -34,9 +34,17 @@ if os.path.exists(dst):
         local = json.load(f)
 
 # Apply shared fields from dotfiles; preserve everything else
-for key in ["model", "hooks", "enabledPlugins"]:
+for key in ["model", "hooks"]:
     if key in dotfiles:
         local[key] = dotfiles[key]
+
+# enabledPlugins: deep merge — local explicit false takes precedence (machine-specific opt-out)
+if "enabledPlugins" in dotfiles:
+    local_plugins = local.get("enabledPlugins", {})
+    for plugin, enabled in dotfiles["enabledPlugins"].items():
+        if local_plugins.get(plugin) is not False:
+            local_plugins[plugin] = enabled
+    local["enabledPlugins"] = local_plugins
 
 with open(dst, "w") as f:
     json.dump(local, f, indent=2)
