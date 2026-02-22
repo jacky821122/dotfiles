@@ -8,11 +8,11 @@
 
 ### 1. 安裝 LSP Language Server Binaries
 
-| 語言 | 安裝指令 |
-|---|---|
-| Python | `pip install pyright` |
-| C/C++ | `sudo apt-get install clangd` |
-| JavaScript | `npm install -g --prefix ~/.local typescript-language-server typescript` |
+| 語言 | 安裝指令 | 備註 |
+|---|---|---|
+| Python | `pip install pyright` | |
+| C/C++ | `sudo apt-get install clangd` | NAS 的 entware 沒有，跳過 |
+| JavaScript | `npm install -g --prefix ~/.local typescript-language-server typescript` | |
 
 ### 2. 在 Claude Code 啟用 LSP Plugins
 
@@ -23,6 +23,20 @@
 ```
 
 > `settings.json` 裡已有 `enabledPlugins` 紀錄（透過 symlink 同步），但仍需執行上述指令讓 Claude Code 與本機 binary 完成連結。
+
+**機器上若沒安裝某個 binary（如 NAS 上的 clangd），必須在 bootstrap 後手動將該 plugin 設為 false，否則 Claude Code 啟動時會等待 timeout：**
+
+```bash
+python3 -c "
+import json
+path = '/var/services/homes/jacky821122/.claude/settings.json'
+with open(path) as f: s = json.load(f)
+s.setdefault('enabledPlugins', {})['clangd-lsp@claude-plugins-official'] = False
+with open(path, 'w') as f: json.dump(s, f, indent=2)
+"
+```
+
+這個 `false` 在下次 bootstrap 時會被保留（deep merge 設計）。
 
 ### 3. 設定機器特定的環境變數
 
@@ -161,3 +175,13 @@ dotfiles/claude/          ~/.claude/
 1. 在 `skills/<skill-name>/` 建立 `SKILL.md`，開頭寫 frontmatter（name、description、user-invocable: true）
 2. commit + push
 3. 之後在 Claude Code 輸入 `/<skill-name>` 即可使用
+
+---
+
+## 已知機器限制
+
+### NAS（146-7, Synology, AMD Ryzen Embedded R1600）
+
+- **啟動慢（~1-2 分鐘）**：Claude Code 完整初始化需載入約 500MB JS 模組，在 NAS 的 HDD 上 cold start 慢是硬體限制，非設定問題。建議減少重啟頻率。
+- **clangd 不可用**：entware 無此套件，手動編譯過於麻煩。bootstrap 後需手動將 `clangd-lsp@claude-plugins-official` 設為 `false`（見上方說明）。
+- **版本鎖定在 2.1.25**：較新版本在此 kernel 版本上會 hang。`~/.claude.json` 已設 `autoUpdates: false`；另以 `chmod a-w ~/.local/share/claude/versions/` 防止自動更新覆蓋（NAS 的 filesystem 不支援 `chattr +i`）。
