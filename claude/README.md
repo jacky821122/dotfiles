@@ -23,7 +23,7 @@ dotfiles/claude/          ~/.claude/（symlink）
 
 每次開新 session，Claude 都會讀這份文件。目前設定的原則包含：
 
-- **非trivial 的任務一律從 plan mode 開始**，先對齊方向再動手
+- **非 trivial 的任務一律從 plan mode 開始**，先對齊方向再動手
 - **保持 session 乾淨**：這個對話只負責討論和 review，實際改 code 交給 subagent 或 worktree
 - **最小變更原則**：不要做超出需求的 refactor、不要加多餘的註解
 - **新專案開始時**先讀 CLAUDE.md，再快速掃描專案結構，不要急著動 code
@@ -102,7 +102,7 @@ dotfiles/claude/          ~/.claude/（symlink）
 
 讓 Claude 即時看到 language server 的靜態分析結果（型別錯誤、import 找不到等），比 post-edit linter 更即時、更語義化。
 
-### 已安裝的 Language Server Binaries
+### Language Server Binaries
 
 | 語言 | Binary | 安裝方式 |
 |---|---|---|
@@ -112,15 +112,13 @@ dotfiles/claude/          ~/.claude/（symlink）
 
 ### 在 Claude Code 啟用 Plugin
 
-Language server binary 裝好後，在 Claude Code 輸入框執行：
+`settings.json` 裡已有 `enabledPlugins` 紀錄（透過 symlink 同步），但新機器仍需在 Claude Code 內執行安裝指令，讓 binary 和 plugin 正確連結：
 
 ```
 /plugin install pyright-lsp@claude-plugins-official
 /plugin install clangd-lsp@claude-plugins-official
 /plugin install typescript-lsp@claude-plugins-official
 ```
-
-裝好後自動生效，不需要額外設定。
 
 ---
 
@@ -138,7 +136,7 @@ export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_..."
 ```
 Token 需要的 scope：`repo`、`read:org`、`read:user`
 
-**新機器設定（執行一次）：**
+**新機器設定（執行一次）：** 確認 token 已 export 後執行：
 ```bash
 python3 - << 'EOF'
 import json, os
@@ -159,7 +157,7 @@ print("Done")
 EOF
 ```
 
-設定後 Claude Code 重啟，`/mcp` 即可看到 github server。
+設定後重啟 Claude Code，`/mcp` 即可看到 github server。
 
 ---
 
