@@ -126,3 +126,6 @@ if [ -f '/home/jacky821122/google-cloud-sdk/path.zsh.inc' ]; then . '/home/jacky
 if [ -f '/home/jacky821122/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/jacky821122/google-cloud-sdk/completion.zsh.inc'; fi
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# Machine-specific overrides (not in dotfiles)
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local

@@ -11,11 +11,15 @@ bash ~/dotfiles/bootstrap.sh
 
 The bootstrap script detects the environment (WSL / macOS / Linux) and symlinks the appropriate shell config. Claude Code config is always applied regardless of environment.
 
+> ⚠️ After running bootstrap, `~/.zshrc` becomes a symlink. Machine-specific settings (e.g. tokens, local paths) go in `~/.zshrc.local` — this file is sourced automatically but never committed to dotfiles.
+
 To set up Claude Code only:
 
 ```bash
 bash ~/dotfiles/claude/bootstrap.sh
 ```
+
+After bootstrap, complete the manual steps in [claude/README.md](claude/README.md).
 
 ## Adding a new environment
 

@@ -1,6 +1,67 @@
 # Claude Code 設定備忘錄
 
-這份文件記錄我對 Claude Code 做了哪些設定與優化，方便自己日後回顧或修改。
+---
+
+## 新機器設定清單
+
+`bootstrap.sh` 會自動處理 symlinks，但以下項目需要手動完成：
+
+### 1. 安裝 LSP Language Server Binaries
+
+| 語言 | 安裝指令 |
+|---|---|
+| Python | `pip install pyright` |
+| C/C++ | `sudo apt-get install clangd` |
+| JavaScript | `npm install -g --prefix ~/.local typescript-language-server typescript` |
+
+### 2. 在 Claude Code 啟用 LSP Plugins
+
+```
+/plugin install pyright-lsp@claude-plugins-official
+/plugin install clangd-lsp@claude-plugins-official
+/plugin install typescript-lsp@claude-plugins-official
+```
+
+> `settings.json` 裡已有 `enabledPlugins` 紀錄（透過 symlink 同步），但仍需執行上述指令讓 Claude Code 與本機 binary 完成連結。
+
+### 3. 設定機器特定的環境變數
+
+Bootstrap 後 `~/.zshrc` 是 symlink，機器專屬的設定（token 等）放在 `~/.zshrc.local`——這個檔案不進 dotfiles，每台機器各自維護：
+
+```bash
+# ~/.zshrc.local
+export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_..."
+```
+
+Token 需要的 scope：`repo`、`read:org`、`read:user`
+
+`~/.zshrc` 會自動 source `~/.zshrc.local`（若存在）。
+
+### 4. 設定 GitHub MCP
+
+確認 token 已 export 後執行：
+
+```bash
+python3 - << 'EOF'
+import json, os
+path = os.path.expanduser("~/.claude.json")
+with open(path, "r") as f:
+    config = json.load(f)
+config.setdefault("mcpServers", {})["github"] = {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-github"],
+    "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN", "")
+    }
+}
+with open(path, "w") as f:
+    json.dump(config, f, indent=2)
+print("Done")
+EOF
+```
+
+重啟 Claude Code 後，`/mcp` 應可看到 github server 已連線。
 
 ---
 
@@ -49,27 +110,13 @@ dotfiles/claude/          ~/.claude/（symlink）
 | `PermissionRequest` | Claude 要使用某工具時 | 自動批准唯讀操作（Read/Glob/Grep/LS） |
 | `PostToolUse` | 每次 Edit 或 Write 完成後 | 自動跑 linter，有問題就輸出給 Claude |
 
----
+### Hooks 詳細說明
 
-## Hooks 詳細說明
+**`session-start.sh`**：新 session 開始時輸出當前目錄、日期、git branch、最近 3 個 commit、是否有 project CLAUDE.md。
 
-### `session-start.sh`（SessionStart）
+**`auto-approve-readonly.sh`**：Read、Glob、Grep、LS、TodoRead 自動批准，其他操作仍需確認。
 
-新 session 開始時自動執行，輸出：
-- 當前目錄路徑與日期
-- 如果在 git repo 內：目前 branch + 最近 3 個 commit
-- 是否有 project CLAUDE.md
-
-這讓 Claude 一開場就有基本的專案 context，不用每次手動說明。
-
-### `auto-approve-readonly.sh`（PermissionRequest）
-
-當 Claude 要使用 Read、Glob、Grep、LS、TodoRead 時自動批准，不需要我手動按確認。
-其他需要 permission 的操作（例如 Bash 執行、寫入檔案）還是走正常流程。
-
-### `post-edit-lint.sh`（PostToolUse）
-
-每次 Claude 編輯或建立檔案後，自動根據副檔名跑對應的 linter：
+**`post-edit-lint.sh`**：Edit 或 Write 後自動跑對應 linter：
 
 | 檔案類型 | Linter |
 |---|---|
@@ -79,85 +126,19 @@ dotfiles/claude/          ~/.claude/（symlink）
 | `.go` | `golint` |
 | `.sh` / `.bash` | `shellcheck` |
 
-有問題才輸出，沒問題靜默。Linter 沒裝的話自動跳過，不影響正常使用。
-效果是讓 Claude 在改完 code 的當下就看到 linting 問題，形成自動修正的閉環。
-
 ---
 
 ## Skills
 
 ### `setup-hooks`（`/setup-hooks`）
 
-用途：幫我設定新的 Claude Code hook，不用每次重新查文件。
+幫我設定新的 Claude Code hook，不用每次重新查文件。
 
-使用方式：在 Claude Code 輸入框輸入 `/setup-hooks [hook類型] [你想做的事]`
+使用方式：`/setup-hooks [hook類型] [你想做的事]`
 
 例如：
 - `/setup-hooks PostToolUse 每次跑完測試後顯示覆蓋率`
 - `/setup-hooks SessionStart 自動讀取 .env.example 提醒我哪些環境變數需要設定`
-
----
-
-## LSP Plugins
-
-讓 Claude 即時看到 language server 的靜態分析結果（型別錯誤、import 找不到等），比 post-edit linter 更即時、更語義化。
-
-### Language Server Binaries
-
-| 語言 | Binary | 安裝方式 |
-|---|---|---|
-| Python | `pyright-langserver` | `pip install pyright` |
-| C/C++ | `clangd` | `sudo apt-get install clangd` |
-| JavaScript | `typescript-language-server` | `npm install -g --prefix ~/.local typescript-language-server typescript` |
-
-### 在 Claude Code 啟用 Plugin
-
-`settings.json` 裡已有 `enabledPlugins` 紀錄（透過 symlink 同步），但新機器仍需在 Claude Code 內執行安裝指令，讓 binary 和 plugin 正確連結：
-
-```
-/plugin install pyright-lsp@claude-plugins-official
-/plugin install clangd-lsp@claude-plugins-official
-/plugin install typescript-lsp@claude-plugins-official
-```
-
----
-
-## MCP Servers
-
-MCP 讓 Claude 直接連接外部工具與資料來源。設定寫入 `~/.claude.json`，**不進 dotfiles**（因為該檔含有 runtime state），新機器需重新執行以下指令。
-
-### GitHub MCP
-
-讓 Claude 直接讀寫 GitHub 的 PR、issues、comments，不用手動複製貼上。
-
-**前置條件：** `~/.zshrc` 裡需要有：
-```bash
-export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_..."
-```
-Token 需要的 scope：`repo`、`read:org`、`read:user`
-
-**新機器設定（執行一次）：** 確認 token 已 export 後執行：
-```bash
-python3 - << 'EOF'
-import json, os
-path = os.path.expanduser("~/.claude.json")
-with open(path, "r") as f:
-    config = json.load(f)
-config.setdefault("mcpServers", {})["github"] = {
-    "type": "stdio",
-    "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-github"],
-    "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN", "")
-    }
-}
-with open(path, "w") as f:
-    json.dump(config, f, indent=2)
-print("Done")
-EOF
-```
-
-設定後重啟 Claude Code，`/mcp` 即可看到 github server。
 
 ---
 
