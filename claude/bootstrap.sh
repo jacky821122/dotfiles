@@ -1,6 +1,6 @@
 #!/bin/bash
-# bootstrap.sh — Set up Claude Code dotfiles symlinks
-# Run once per machine after cloning dotfiles
+# bootstrap.sh — Set up Claude Code dotfiles
+# Run once per machine after cloning dotfiles, or re-run to apply updates
 
 set -e
 
@@ -11,21 +11,52 @@ echo "Setting up Claude Code dotfiles..."
 
 mkdir -p "$CLAUDE_DIR"
 
-for item in settings.json CLAUDE.md keybindings.json hooks skills rules; do
+# settings.json: merge dotfiles fields into local file (preserves machine-specific settings)
+merge_settings() {
+    local src="$DOTFILES_CLAUDE/settings.json"
+    local dst="$CLAUDE_DIR/settings.json"
+
+    # Remove old symlink if present (migrating from symlink to merge approach)
+    [ -L "$dst" ] && rm "$dst"
+
+    python3 - << PYEOF
+import json, os
+
+src = "$src"
+dst = "$dst"
+
+with open(src) as f:
+    dotfiles = json.load(f)
+
+local = {}
+if os.path.exists(dst):
+    with open(dst) as f:
+        local = json.load(f)
+
+# Apply shared fields from dotfiles; preserve everything else
+for key in ["model", "hooks", "enabledPlugins"]:
+    if key in dotfiles:
+        local[key] = dotfiles[key]
+
+with open(dst, "w") as f:
+    json.dump(local, f, indent=2)
+
+print(f"Merged: {dst}")
+PYEOF
+}
+
+merge_settings
+
+# Symlink the rest
+for item in CLAUDE.md keybindings.json hooks skills rules; do
     src="$DOTFILES_CLAUDE/$item"
     dst="$CLAUDE_DIR/$item"
 
-    # Skip if source doesn't exist
     [ -e "$src" ] || continue
 
-    # Back up existing non-symlink files
     if [ -e "$dst" ] && [ ! -L "$dst" ]; then
         echo "Backing up: $dst -> ${dst}.bak"
         mv "$dst" "${dst}.bak"
-        if [ "$item" = "settings.json" ]; then
-            echo "  ⚠️  If you had custom permissions (allow/deny rules) in settings.json,"
-            echo "      check ${dst}.bak and add them to dotfiles/claude/settings.json."
-        fi
     fi
 
     ln -sf "$src" "$dst"

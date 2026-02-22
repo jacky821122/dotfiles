@@ -70,13 +70,15 @@ EOF
 `~/.claude/` 裡有很多 Claude Code 自動產生的 runtime 檔案（歷史紀錄、credentials、專案快取等），這些不應該進版本控制。所以這個資料夾只管理「真正需要追蹤」的幾個檔案，透過 symlink 掛進 `~/.claude/`：
 
 ```
-dotfiles/claude/          ~/.claude/（symlink）
-├── settings.json    →    settings.json
-├── CLAUDE.md        →    CLAUDE.md
-├── hooks/           →    hooks/
-├── skills/          →    skills/
-└── rules/           →    rules/
+dotfiles/claude/          ~/.claude/
+├── settings.json    →    settings.json  （merge，非 symlink）
+├── CLAUDE.md        →    CLAUDE.md      （symlink）
+├── hooks/           →    hooks/         （symlink）
+├── skills/          →    skills/        （symlink）
+└── rules/           →    rules/         （symlink）
 ```
+
+`settings.json` 用 merge 而非 symlink：bootstrap 每次執行時，會將 dotfiles 的 `model`、`hooks`、`enabledPlugins` 寫入本機的 `settings.json`，其餘欄位（如 `autoUpdaterStatus: disabled`）保留不動。這讓每台機器可以有自己的 Claude Code 設定，而不影響全域同步的核心設定。
 
 ---
 
