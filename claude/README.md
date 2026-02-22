@@ -132,13 +132,34 @@ MCP 讓 Claude 直接連接外部工具與資料來源。設定寫入 `~/.claude
 
 讓 Claude 直接讀寫 GitHub 的 PR、issues、comments，不用手動複製貼上。
 
-**設定指令（新機器執行一次）：**
+**前置條件：** `~/.zshrc` 裡需要有：
 ```bash
-claude mcp add --transport http --scope user github https://api.githubcopilot.com/mcp/
+export GITHUB_PERSONAL_ACCESS_TOKEN="ghp_..."
+```
+Token 需要的 scope：`repo`、`read:org`、`read:user`
+
+**新機器設定（執行一次）：**
+```bash
+python3 - << 'EOF'
+import json, os
+path = os.path.expanduser("~/.claude.json")
+with open(path, "r") as f:
+    config = json.load(f)
+config.setdefault("mcpServers", {})["github"] = {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-github"],
+    "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN", "")
+    }
+}
+with open(path, "w") as f:
+    json.dump(config, f, indent=2)
+print("Done")
+EOF
 ```
 
-**認證（設定後執行一次）：**
-在 Claude Code 輸入 `/mcp`，選 github 做 OAuth 認證。
+設定後 Claude Code 重啟，`/mcp` 即可看到 github server。
 
 ---
 
