@@ -34,3 +34,25 @@
 - `!command` — run a bash command and share output directly in this session
 - `/rewind` or double ESC — undo last message and revert code changes
 - `/setup-hooks` — add or modify a Claude Code hook
+
+## Language & Communication
+
+- 討論用台灣繁體中文，commit message 與專有名詞用英文
+- 預設簡短直接，有問題我會主動追問
+- 不要當 yes man——如果覺得我的方向有問題，直接提出不同意見
+
+## Coding Style
+
+- Languages: C/C++, Python, JavaScript (依專案而定)
+- Pragmatic style — 什麼適合就用什麼，不教條
+
+## Proactivity
+
+- 積極給改善建議，我會自己篩選
+- 明顯的 bug/typo 可以順手指出
+- 但大改動先提出來讓我決定
+
+## Testing
+
+- 有空的話寫測試很好，但開發優先不強制
+- 跟隨專案現有的 test infra
