@@ -22,6 +22,10 @@ for item in settings.json CLAUDE.md keybindings.json hooks skills rules; do
     if [ -e "$dst" ] && [ ! -L "$dst" ]; then
         echo "Backing up: $dst -> ${dst}.bak"
         mv "$dst" "${dst}.bak"
+        if [ "$item" = "settings.json" ]; then
+            echo "  ⚠️  If you had custom permissions (allow/deny rules) in settings.json,"
+            echo "      check ${dst}.bak and add them to dotfiles/claude/settings.json."
+        fi
     fi
 
     ln -sf "$src" "$dst"
