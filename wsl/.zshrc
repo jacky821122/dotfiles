@@ -63,9 +63,10 @@ ZSH_THEME="bira"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  git zsh-completions zsh-syntax-highlighting
+  git zsh-syntax-highlighting
 )
 
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -90,7 +91,7 @@ source $ZSH/oh-my-zsh.sh
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/jacky821122/.anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/jacky821122/.anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
@@ -116,16 +117,7 @@ umask 22
 # export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 
 export LIBGL_ALWAYS_INDIRECT=1
-alias cdtest="cd /mnt/d/test"
-alias cdv="cd /mnt/d/Users/Jacky/OneDrive/VIX"
-alias cdf="cd '/mnt/d/Users/Jacky/OneDrive/flask'"
-alias cdk="cd '/mnt/d/Users/Jacky/OneDrive/kline'"
-alias cdotest="cd /mnt/d/Users/Jacky/OneDrive/test"
-alias cdba="cd ~/balmii"
-alias ggg="./mvsis -f ggg.sh"
-alias aaa="./mvsis -f aaa.script"
-alias bbb="./mvsis -f bbb.script"
-alias subl="/mnt/c/Program\ Files/Sublime\ Text/subl.exe"
+source .alias
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/jacky821122/google-cloud-sdk/path.zsh.inc' ]; then . '/home/jacky821122/google-cloud-sdk/path.zsh.inc'; fi
@@ -133,3 +125,4 @@ if [ -f '/home/jacky821122/google-cloud-sdk/path.zsh.inc' ]; then . '/home/jacky
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/jacky821122/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/jacky821122/google-cloud-sdk/completion.zsh.inc'; fi
 
+export PATH="$HOME/.local/bin:$PATH"
