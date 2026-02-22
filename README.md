@@ -49,6 +49,10 @@ The root `bootstrap.sh` will pick it up automatically.
 
 ## Claude Code config
 
+詳細的設定說明與設計理念見 [claude/README.md](claude/README.md)。
+
+
+
 `~/.claude/` contains many runtime files that should not be version-controlled (credentials, history, project cache). Only the following are managed here and symlinked individually:
 
 | Symlink | Source |
