@@ -134,7 +134,7 @@ MCP 讓 Claude 直接連接外部工具與資料來源。設定寫入 `~/.claude
 
 **設定指令（新機器執行一次）：**
 ```bash
-claude mcp add --transport http github https://api.githubcopilot.com/mcp/
+claude mcp add --transport http --scope user github https://api.githubcopilot.com/mcp/
 ```
 
 **認證（設定後執行一次）：**
