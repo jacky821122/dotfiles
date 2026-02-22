@@ -59,6 +59,8 @@ for item in CLAUDE.md keybindings.json hooks skills rules; do
         mv "$dst" "${dst}.bak"
     fi
 
+    # Remove existing symlink before creating new one (avoids ln -sf nesting into symlinked dirs)
+    [ -L "$dst" ] && rm "$dst"
     ln -sf "$src" "$dst"
     echo "Linked: $dst"
 done
