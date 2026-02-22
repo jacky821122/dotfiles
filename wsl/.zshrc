@@ -117,7 +117,7 @@ umask 22
 # export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0
 
 export LIBGL_ALWAYS_INDIRECT=1
-source .alias
+source ~/.alias
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/jacky821122/google-cloud-sdk/path.zsh.inc' ]; then . '/home/jacky821122/google-cloud-sdk/path.zsh.inc'; fi
