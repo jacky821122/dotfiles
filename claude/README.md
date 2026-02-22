@@ -98,6 +98,50 @@ dotfiles/claude/          ~/.claude/（symlink）
 
 ---
 
+## LSP Plugins
+
+讓 Claude 即時看到 language server 的靜態分析結果（型別錯誤、import 找不到等），比 post-edit linter 更即時、更語義化。
+
+### 已安裝的 Language Server Binaries
+
+| 語言 | Binary | 安裝方式 |
+|---|---|---|
+| Python | `pyright-langserver` | `pip install pyright` |
+| C/C++ | `clangd` | `sudo apt-get install clangd` |
+| JavaScript | `typescript-language-server` | `npm install -g --prefix ~/.local typescript-language-server typescript` |
+
+### 在 Claude Code 啟用 Plugin
+
+Language server binary 裝好後，在 Claude Code 輸入框執行：
+
+```
+/plugin install pyright-lsp@claude-plugins-official
+/plugin install clangd-lsp@claude-plugins-official
+/plugin install typescript-lsp@claude-plugins-official
+```
+
+裝好後自動生效，不需要額外設定。
+
+---
+
+## MCP Servers
+
+MCP 讓 Claude 直接連接外部工具與資料來源。設定寫入 `~/.claude.json`，**不進 dotfiles**（因為該檔含有 runtime state），新機器需重新執行以下指令。
+
+### GitHub MCP
+
+讓 Claude 直接讀寫 GitHub 的 PR、issues、comments，不用手動複製貼上。
+
+**設定指令（新機器執行一次）：**
+```bash
+claude mcp add --transport http github https://api.githubcopilot.com/mcp/
+```
+
+**認證（設定後執行一次）：**
+在 Claude Code 輸入 `/mcp`，選 github 做 OAuth 認證。
+
+---
+
 ## 常用參考
 
 **支援的 Hook 事件完整列表：**
