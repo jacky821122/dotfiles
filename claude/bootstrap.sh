@@ -34,7 +34,7 @@ if os.path.exists(dst):
         local = json.load(f)
 
 # Apply shared fields from dotfiles; preserve everything else
-for key in ["model", "hooks"]:
+for key in ["model", "hooks", "permissions"]:
     if key in dotfiles:
         local[key] = dotfiles[key]
 
