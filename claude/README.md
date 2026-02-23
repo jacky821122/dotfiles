@@ -56,23 +56,14 @@ Token 需要的 scope：`repo`、`read:org`、`read:user`
 確認 token 已 export 後執行：
 
 ```bash
-python3 - << 'EOF'
+python3 -c "
 import json, os
-path = os.path.expanduser("~/.claude.json")
-with open(path, "r") as f:
-    config = json.load(f)
-config.setdefault("mcpServers", {})["github"] = {
-    "type": "stdio",
-    "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-github"],
-    "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": os.environ.get("GITHUB_PERSONAL_ACCESS_TOKEN", "")
-    }
-}
-with open(path, "w") as f:
-    json.dump(config, f, indent=2)
-print("Done")
-EOF
+path = os.path.expanduser('~/.claude.json')
+with open(path) as f: config = json.load(f)
+config.setdefault('mcpServers', {})['github'] = {'type': 'stdio', 'command': 'npx', 'args': ['-y', '@modelcontextprotocol/server-github'], 'env': {'GITHUB_PERSONAL_ACCESS_TOKEN': os.environ.get('GITHUB_PERSONAL_ACCESS_TOKEN', '')}}
+with open(path, 'w') as f: json.dump(config, f, indent=2)
+print('Done')
+"
 ```
 
 重啟 Claude Code 後，`/mcp` 應可看到 github server 已連線。
