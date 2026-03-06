@@ -9,7 +9,7 @@
 ## Working Style
 
 - 非 trivial 的任務先從 plan mode 開始，對齊方向再動手
-- 最小變更——不要做超出需求的 refactor、不加多餘註解或 docstring
+- Reading repo, document, code base 等理解任務時，盡量讀深入，不要只讀一部分覺得自己懂了就開始動作。除非你有把握理解我的想法或架構，否則不要裝懂。有任何不清楚或模糊的地方就向我詢問。我不介意多次來回問答互動直到你完全清楚狀況。
 
 ## Proactivity
 
