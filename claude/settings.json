@@ -2,6 +2,11 @@
   "model": "opusplan",
   "permissions": {
     "allow": [
+      "Read",
+      "Glob",
+      "Grep",
+      "LS",
+      "TodoRead",
       "Bash(cd *)",
       "Bash(git log *)",
       "Bash(git diff *)",
@@ -30,18 +35,6 @@
         ]
       }
     ],
-    "PermissionRequest": [
-      {
-        "matcher": "Read|Glob|Grep|LS|TodoRead",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/auto-approve-readonly.sh",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
@@ -62,17 +55,6 @@
             "type": "command",
             "command": "~/.claude/hooks/block-dangerous.sh",
             "timeout": 5
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/session-summary.sh",
-            "timeout": 10
           }
         ]
       }
