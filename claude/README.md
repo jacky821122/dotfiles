@@ -92,10 +92,8 @@ dotfiles/claude/          ~/.claude/
 每次開新 session，Claude 都會讀這份文件。目前設定的原則包含：
 
 - **非 trivial 的任務一律從 plan mode 開始**，先對齊方向再動手
-- **保持 session 乾淨**：這個對話只負責討論和 review，實際改 code 交給 subagent 或 worktree
 - **最小變更原則**：不要做超出需求的 refactor、不要加多餘的註解
-- **新專案開始時**先讀 CLAUDE.md，再快速掃描專案結構，不要急著動 code
-- **CLAUDE.md 是階層式的**：專案層級的 CLAUDE.md 優先於這份全域設定，可以用 `@path` import 共用規則
+- **積極提建議**，但大改動先讓我決定
 
 ---
 
@@ -114,14 +112,14 @@ dotfiles/claude/          ~/.claude/
 | Hook 事件 | 觸發時機 | 做什麼 |
 |---|---|---|
 | `SessionStart` | 每次開新 session | 印出當前目錄、git branch、最近 3 個 commit |
-| `PermissionRequest` | Claude 要使用某工具時 | 自動批准唯讀操作（Read/Glob/Grep/LS） |
 | `PostToolUse` | 每次 Edit 或 Write 完成後 | 自動跑 linter，有問題就輸出給 Claude |
+| `PreToolUse` | 每次 Bash 執行前 | 攔截危險指令（rm -rf 等） |
+
+> Read/Glob/Grep/LS/TodoRead 已列入 `permissions.allow`，直接自動通過，不需要 hook。
 
 ### Hooks 詳細說明
 
 **`session-start.sh`**：新 session 開始時輸出當前目錄、日期、git branch、最近 3 個 commit、是否有 project CLAUDE.md。
-
-**`auto-approve-readonly.sh`**：Read、Glob、Grep、LS、TodoRead 自動批准，其他操作仍需確認。
 
 **`post-edit-lint.sh`**：Edit 或 Write 後自動跑對應 linter：
 
