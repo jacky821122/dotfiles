@@ -1,3 +1,4 @@
+typeset -U path PATH
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Helper: print install hint for missing dependency (usage: _zshrc_hint "name" "install command")
