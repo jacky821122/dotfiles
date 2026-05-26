@@ -2,7 +2,7 @@ typeset -U path PATH
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Helper: print install hint for missing dependency (usage: _zshrc_hint "name" "install command")
-_zshrc_hint() { echo "\033[33m[zshrc]\033[0m $1 not found. Install with:\n  \033[36m$2\033[0m" >&2; }
+_zshrc_hint() { printf '\033[33m[zshrc]\033[0m %s not found. Install with:\n  \033[36m%s\033[0m\n' "$1" "$2" >&2; }
 
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -24,7 +24,6 @@ if [ -d "$ZSH" ]; then
             "git clone https://github.com/zsh-users/zsh-completions \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions"
     fi
 
-    autoload -U compinit && compinit
     source "$ZSH/oh-my-zsh.sh"
 else
     _zshrc_hint "oh-my-zsh" \
@@ -42,11 +41,12 @@ if [ -n "$_conda_dir" ]; then
     __conda_setup="$("$_conda_dir/bin/conda" 'shell.zsh' 'hook' 2>/dev/null)"
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
+    elif [ -f "$_conda_dir/etc/profile.d/conda.sh" ]; then
+        . "$_conda_dir/etc/profile.d/conda.sh"
     else
-        [ -f "$_conda_dir/etc/profile.d/conda.sh" ] && . "$_conda_dir/etc/profile.d/conda.sh" || export PATH="$_conda_dir/bin:$PATH"
+        export PATH="$_conda_dir/bin:$PATH"
     fi
     unset __conda_setup
-    PROMPT=$(echo $PROMPT | sed 's/(base) //')
 fi
 unset _conda_dir _d
 
