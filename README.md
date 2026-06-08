@@ -49,7 +49,7 @@ Shell 啟動時缺少 dependency 會看到類似：
 | Dependency | 必要性 | 缺少時行為 |
 |---|---|---|
 | [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) | 建議安裝 | 印安裝指令，fallback 到基本 `compinit` |
-| [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting) | 選用 | 印 `git clone` 指令，跳過 plugin |
+| [fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting) | 選用 | 印 `git clone` 指令，跳過 plugin |
 | [zsh-completions](https://github.com/zsh-users/zsh-completions) | 選用 | 印 `git clone` 指令，跳過 plugin |
 | Conda | 選用 | 靜默跳過（自動偵測 `~/.anaconda3`、`~/anaconda3`、`~/miniconda3`） |
 | Google Cloud SDK | 選用 | 靜默跳過 |

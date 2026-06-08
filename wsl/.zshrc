@@ -11,11 +11,11 @@ if [ -d "$ZSH" ]; then
 
     plugins=(git)
     _omz_custom="${ZSH_CUSTOM:-$ZSH/custom}"
-    if [ -d "$_omz_custom/plugins/zsh-syntax-highlighting" ]; then
-        plugins+=(zsh-syntax-highlighting)
+    if [ -d "$_omz_custom/plugins/fast-syntax-highlighting" ]; then
+        plugins+=(fast-syntax-highlighting)
     else
-        _zshrc_hint "zsh-syntax-highlighting" \
-            "git clone https://github.com/zsh-users/zsh-syntax-highlighting \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
+        _zshrc_hint "fast-syntax-highlighting" \
+            "git clone https://github.com/zdharma-continuum/fast-syntax-highlighting \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting"
     fi
     if [ -d "$_omz_custom/plugins/zsh-completions" ]; then
         fpath+=$_omz_custom/plugins/zsh-completions/src
@@ -23,6 +23,9 @@ if [ -d "$ZSH" ]; then
         _zshrc_hint "zsh-completions" \
             "git clone https://github.com/zsh-users/zsh-completions \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions"
     fi
+
+    # Machine-local completions (prepend so they shadow vendor-completions of same name)
+    [ -d "$HOME/.zsh/completions" ] && fpath=("$HOME/.zsh/completions" $fpath)
 
     source "$ZSH/oh-my-zsh.sh"
 else
