@@ -24,9 +24,6 @@ if [ -d "$ZSH" ]; then
             "git clone https://github.com/zsh-users/zsh-completions \${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions"
     fi
 
-    # Machine-local completions (prepend so they shadow vendor-completions of same name)
-    [ -d "$HOME/.zsh/completions" ] && fpath=("$HOME/.zsh/completions" $fpath)
-
     source "$ZSH/oh-my-zsh.sh"
 else
     _zshrc_hint "oh-my-zsh" \
