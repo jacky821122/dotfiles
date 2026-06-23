@@ -32,4 +32,4 @@ else
 fi
 
 # Claude Code config
-bash "$DOTFILES/claude/bootstrap.sh"
+# bash "$DOTFILES/claude/bootstrap.sh"
