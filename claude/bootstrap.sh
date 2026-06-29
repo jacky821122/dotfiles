@@ -76,4 +76,17 @@ done
 # Make hook scripts executable
 chmod +x "$DOTFILES_CLAUDE/hooks/"*.sh 2>/dev/null || true
 
+# Machine-local environment map: stub it so the @import in CLAUDE.md always resolves.
+# Loose file, never symlinked into dotfiles — each machine fills in its own facts.
+LOCAL_MAP="$CLAUDE_DIR/CLAUDE.local.md"
+if [ ! -e "$LOCAL_MAP" ]; then
+    cat > "$LOCAL_MAP" << 'MAPEOF'
+# Machine-local environment map
+
+> Machine-specific facts (hostname, internal IPs, NAS, GPU). Loose file, not version-controlled.
+> Fill in for this machine. Imported by ~/.claude/CLAUDE.md.
+MAPEOF
+    echo "Created stub: $LOCAL_MAP"
+fi
+
 echo "Done."
