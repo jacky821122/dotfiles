@@ -27,9 +27,11 @@ if [ -d "$ENV_DIR" ]; then
         ln -sf "$ENV_DIR/.zshrc" "$HOME/.zshrc"
         echo "Linked: ~/.zshrc"
     fi
+    if [ -f "$ENV_DIR/.vimrc" ]; then
+        [ -f "$HOME/.vimrc" ] && [ ! -L "$HOME/.vimrc" ] && mv "$HOME/.vimrc" "$HOME/.vimrc.bak" && echo "Backed up: ~/.vimrc"
+        ln -sf "$ENV_DIR/.vimrc" "$HOME/.vimrc"
+        echo "Linked: ~/.vimrc"
+    fi
 else
     echo "No shell config found for environment '$ENV' (create $ENV_DIR/ to add one)"
 fi
-
-# Claude Code config
-# bash "$DOTFILES/claude/bootstrap.sh"
