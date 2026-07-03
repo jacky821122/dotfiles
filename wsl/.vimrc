@@ -50,7 +50,7 @@ set shiftround
 set backspace=indent,eol,start
 
 " --- Wrapping & whitespace ---
-set nowrap
+" set nowrap
 set linebreak
 set list
 set listchars=tab:▸\ ,trail:·,extends:>,precedes:<,nbsp:+
