@@ -89,11 +89,23 @@ dotfiles/claude/          ~/.claude/
 
 ## CLAUDE.md — 給 Claude 的全域工作原則
 
-每次開新 session，Claude 都會讀這份文件。目前設定的原則包含：
+每次開新 session，Claude 都會讀這份文件。2026-07 起核心是「Operating Core」：
+plan-first、bulk 工作派 subagent、完成必經獨立驗證、同法連敗兩次即停、長 session
+主動 handoff。細則抽到 `rules/`（見下節），CLAUDE.md 本身只留精簡路由與環境事實。
 
-- **非 trivial 的任務一律從 plan mode 開始**，先對齊方向再動手
-- **最小變更原則**：不要做超出需求的 refactor、不要加多餘的註解
-- **積極提建議**，但大改動先讓我決定
+## rules/ — 制度檔案（2026-07 建立）
+
+| 檔案 | 內容 |
+|---|---|
+| `delegation.md` | 模型調度：何時派 subagent、模型分層、升降級路徑、回報合約 |
+| `judgment.md` | 判斷 rubric：何時升級／何時算完成／何時該問／方向錯的訊號／品質底線 |
+| `prompts.md` | 六份委派 prompt 模板（搜尋、實作、重構、研究、審查、驗證） |
+| `maintenance.md` | 制度檔案的修改權限、備份程序、Lesson 格式、大小預算 |
+| `diagnosis-2026-07.md` | 建制度時的實測診斷（token 流向）與 re-audit 程序 |
+| `letter-to-future-sessions.md` | 給未來 session 的信：背景、最可能的退化方式 |
+
+修改任何制度檔案前，先讀 `rules/maintenance.md`（權限分級：Lessons 可自助追加，
+改既有規則要先過使用者）。
 
 ---
 
