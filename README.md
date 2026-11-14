@@ -1,5 +1,7 @@
 # dotfiles
 
+> **已退役（2026-11）**：不再用這個 repo 管理設定。還在用它的機器請照 [RETIRE.md](RETIRE.md) 脫鉤。
+
 跨機器管理 shell 與開發工具設定檔，透過 symlink 部署。
 
 ## 新機器設定
