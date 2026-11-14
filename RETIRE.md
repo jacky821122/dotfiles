@@ -84,3 +84,17 @@
 - 18 個 harness 測試通過：`uv run --no-project python -m unittest discover -s ~/.local/share/agent-harness/harness -p 'test_*.py'`
 - 沒搬、只留在備份 tar 裡：`codex/` 範本、舊 skill 副本、`claude/tests/test_models_context.py`。
 - `~/repos/dotfiles` 已由使用者刪除。GitHub repo 是否封存，對話裡沒有紀錄；建議所有機器都脫鉤後再封存。
+
+## 5. 第二台（JARVIS）的脫鉤紀錄（2026-11-14）— 給後面機器的補充
+
+這台走法跟第 4 節不同，也多踩到幾件事：
+
+1. **沒有 harness**：第 3 節 harness / systemd 步驟整段不適用。連結只有 `~/.zshrc`、`~/.vimrc`、`~/.claude/{CLAUDE.md,hooks,skills,rules}`。
+2. **本機 git 改放 `~/.claude` 本身**（使用者選的）：`git init -b main`，`.gitignore` 用白名單（`/*` 再 `!/CLAUDE.md`、`!/CLAUDE.local.md`、`!/settings.json`、`!/rules/`、`!/hooks/`），無 remote；skills 不進 git。`CLAUDE.local.md` 可以進這種本機 repo，規則改為「never in a repo with a remote」。
+3. **未提交／未 push 的修改其實就是 live 版本**（連結直接指進 working tree），`cp -a` 脫鉤後內容自然保留，tar 備份即可，不必先 commit。
+4. **被 gitignore 的檔案不在別台的 clone 裡**：JARVIS 的 `claude/hooks/{notify-discord,poke}.sh`、`skills/{notify-when-done,jarvis-ops/notes,…}` 是 ignored，只存在本機 working tree。`cp -a` 會帶走；別台若需要要自己搬。
+5. **skills 裡可能有指向其他 repo 的絕對連結**（如 `visual-answer`、`ai-conversation`）。`cp -a` 保留連結本身，不算 dotfiles 依賴，但那些 repo 不能刪。先 `find <repo>/claude -type l` 看一下。
+6. **第 2 節的 grep 盤點會漏**：它不掃 `~/.claude/skills/*/SKILL.md`（脫鉤前是連結）與 `~/.claude/projects/*/memory/`。脫鉤後再 `grep -rn dotfiles ~/.claude/{CLAUDE.md,rules,hooks,skills} ~/.claude/projects/*/memory` 一次。`~/.claude/projects/-home-*-dotfiles/memory/` 在 repo 刪掉後會成孤兒，內容要搬到別的專案 memory。
+7. **rules 文件要跟著改**：`maintenance.md`（scope、§2 step 4、§7）、`letter-to-future-sessions.md` 第 1 段、`CLAUDE.md` 的「public + shared across machines」都還把 dotfiles/bootstrap 當現行做法。依 maintenance.md 屬 ask-first，先給使用者 diff。
+8. **用腳本改 markdown 時，錨點要唯一**：`## Lessons` 也出現在 maintenance.md §1 內文裡，用 `index('## Lessons')` 切會切錯、整份重複。用 `'\n## Lessons\n'` 之類的精確錨點，並在改完後檢查行數與 `grep -n '^## '`。
+9. 收尾：repo 改名藏起來驗證後，開新 session 確認 hooks（看 `~/.local/state/claude-hooks/` 時間戳）與 skills 載入，再處理 repo。`~/.codex/config.toml` 的 `[projects."…/dotfiles"]` trust 段可順手刪。
